@@ -6,6 +6,6 @@ you identify bottlenecks in the programs you write.
 
 Install with `devtools`:
 
-    install_github( "cdrv", "timeit", subdir="timeit" )
+    install_github( "timeit", "cdrv", subdir="timeit" )
 	
 ...or find me on CRAN soon!
