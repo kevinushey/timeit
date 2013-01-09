@@ -2,24 +2,49 @@
 \alias{do_timeit}
 \title{Profile a Function Call}
 \usage{
-  do_timeit(call, interval = 0.005,
-    memory.profiling = FALSE)
+  do_timeit(call, replications = NULL, interval = 0.005,
+    memory.profiling = FALSE, show.warnings = FALSE, i = 1,
+    gcFirst = TRUE, gcDuring = FALSE)
 }
 \arguments{
-  \item{call}{a call; this can be a single function call or
-  a whole block.}
+  \item{call}{a call (typically passed down through
+  \code{timeit}).}
 
-  \item{interval}{real: time interval between samples.}
+  \item{interval}{real. time interval between samples.}
 
-  \item{memory.profiling}{logical: write memory use
+  \item{replications}{integer; by default \code{NULL},
+  which indicates we should 'guess' an appropriate number
+  of replications. in order to more accurately profile
+  quickly-running functions, we run the call
+  \code{replications} times, and then infer the run-time as
+  \code{<time>/replications}. by default, the argument is
+  \code{NULL} and we attempt to infer an appropriate number
+  of replications.}
+
+  \item{memory.profiling}{logical. write memory use
   information to file?}
+
+  \item{show.warnings}{boolean. output a warning if any
+  iteration of the run did not produce results?}
+
+  \item{i}{integer. the iteration number. primarily for use
+  from \code{\link{timeit}}.}
+
+  \item{gcFirst}{boolean. run the garbage collector before
+  any evaluation of the function call?}
+
+  \item{gcDuring}{boolean. run the garbage collector before
+  each interation, as produced by \code{replications}?
+  (very slow)}
 }
 \value{
   a data.frame of the profiling times
 }
 \description{
   This is the workhorse function called by
-  \code{\link{timeit}}. It is almost a direct export of the
-  example on \code{\link{summaryRprof}}.
+  \code{\link{timeit}}. Primarily meant to be called
+  through \code{\link{timeit}}. However, if you desire a
+  more direct wrapper to \code{Rprof} then this can be
+  useful.
 }
 

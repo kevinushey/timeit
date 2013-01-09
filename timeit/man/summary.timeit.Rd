@@ -7,10 +7,10 @@
 \arguments{
   \item{object}{an object of class \code{timeit}.}
 
-  \item{...}{ignored.}
+  \item{...}{unused additional arguments.}
 }
 \description{
-  This function generates some summary statistics for
-  output from a \code{\link{timeit}}.
+  This function generates some summary statistics for a
+  \code{\link{timeit}} object.
 }
 

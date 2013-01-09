@@ -1,0 +1,7 @@
+Version 0.2.0
+------------------------------------------------------------------
+  * Now handles errors from summaryRprof() more gracefully
+  * Introduce replication argument for profiling of slowly-running 
+    functions
+  * microbenchmark now used to infer a good number of replications
+    in each timeit call

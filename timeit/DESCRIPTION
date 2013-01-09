@@ -1,7 +1,7 @@
 Package: timeit
 Type: Package
 Title: Easy profiling of R functions
-Version: 0.1.0
+Version: 0.2.0
 Date: 2013-01-08
 Author: Kevin Ushey
 Maintainer: Kevin Ushey <kevinushey@gmail.com>
@@ -10,6 +10,7 @@ Description: Provides an easy-to-use wrapper to Rprof() and summaryRprof()
     addition, a plot method is included for boxplot generation. S3 methods
     are made available for easy summary of the results returned.
 Depends:
+    microbenchmark,
     ggplot2
 License: GPL (>=2)
 Collate:
