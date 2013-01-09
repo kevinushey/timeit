@@ -1,0 +1,5 @@
+export(do_timeit)
+export(timeit)
+S3method(mean,timeit)
+S3method(plot,timeit)
+S3method(summary,timeit)
