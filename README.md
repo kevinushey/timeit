@@ -8,4 +8,6 @@ Install with `devtools`:
 
     install_github( "timeit", "cdrv", subdir="timeit" )
 	
-...or find me on CRAN soon!
+or get me on CRAN with
+
+    install.packages("timeit")
