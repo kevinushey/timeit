@@ -4,7 +4,7 @@
 #' profile hand-holding and provides easier usage. This allows you to profile
 #' either a single function call, or a whole block. Evaluation can be run
 #' multiple times in order to assess variability in the timings of each
-#' function call (to some level of precision).
+#' function call.
 #' 
 #' Function calls that get executed very quickly will be missed
 #' by \code{Rprof}, unless you set \code{interval} very low. However, doing
@@ -19,11 +19,11 @@
 #' we should 'guess' an appropriate number of replications. 
 #' in order to more accurately profile
 #' quickly-running functions, we run the call \code{replications} times,
-#' and then infer the run-time as \code{<time>/replications}.
+#' and then infer the run-time as \code{<time>} / \code{replications}.
 #' by default, the argument is \code{NULL} and we attempt to infer an
 #' appropriate number of replications.
 #' @param interval real. time interval between samples.
-#' @param memory.profiling logical. write memory use information to file?
+#' @param memory.profiling logical. output memory usage statistics?
 #' @param times integer. how many times to call the function?
 #' @param show.warnings boolean. output a warning if any iteration of the
 #' run did not produce results?
@@ -35,7 +35,7 @@
 #' 
 #' Currently, \code{timeit} does not support passing through of arguments,
 #' so don't try to wrap \code{timeit} in a function call, whereby the 
-#' call it attempts to evaluate is passed from a parent function. Eg;
+#' call it attempts to evaluate is passed from a parent function. For example,
 #' 
 #' \code{f <- function(x) { timeit(x) }; f(rnorm(10))} 
 #' 
@@ -48,8 +48,8 @@
 #' statistics,
 #' \code{\link{plot.timeit}} for generating a boxplot of the returned
 #' times, \code{\link{do_timeit}} for the workhorse function, and 
-#' \code{\link{Rprof}} for information on how \R profiles 
-#' execution of \R expressions.
+#' \code{\link{Rprof}} for information on how \R profiles the
+#' execution of expressions.
 #' @examples \dontrun{
 #' tmp <- timeit({
 #'   x <- 1:1E4; y <- x + runif(1E4)
@@ -59,9 +59,11 @@
 #' y <- 1E4
 #' f <- function(x) { summary( sort( rnorm(x) ) ) }
 #' tmp <- timeit( f(y), times=5 )
-#' summary(tmp)
-#' mean(tmp)
-#' plot(tmp)}
+#' if( !is.null(tmp) ) {
+#'   summary(tmp)
+#'   mean(tmp)
+#'   plot(tmp)
+#' }}
 timeit <- function(call,
                    replications=NULL,
                    interval=0.01,
@@ -79,7 +81,12 @@ timeit <- function(call,
   call_me <- match.call()$call
   
   if( is.null(replications) ) {
+    cat("Determining an appropriate number of replications... ")
     replications <- determine_replications( call_me, interval )
+    cat("Done!\n", 
+        replications, 
+        if(replications==1) "replication" else "replications",
+        "will be used.\n\n")
   }
   
   out_list <- vector("list", times)
@@ -93,16 +100,17 @@ timeit <- function(call,
                                 show.warnings=show.warnings, 
                                 i=i )
     
-    ## re-extend out_list in-case it has shrunk due to error
+    ## re-extend out_list in case it has shrunk
     out_list[times*2] <- NULL
   }
   
-  out_list <- out_list[ sapply( out_list, function(x) { !is.null(x) } ) ]
   if( length( out_list ) == 0 ) {
     warning("No events were recorded. Try ",
             "setting 'replications' higher in the 'timeit' call.")
     return( invisible(NULL) )
   }
+  
+  out_list <- out_list[ sapply( out_list, function(x) { !is.null(x) } ) ]
   
   out <- as.data.frame( stringsAsFactors=FALSE, optional=TRUE,
                         do.call( rbind, out_list )
@@ -132,8 +140,8 @@ determine_replications <- function( call, interval, base=1E6 ) {
 
 #' Profile a Function Call
 #' 
-#' This is the workhorse function called by \code{\link{timeit}}.
-#' Primarily meant to be called through \code{\link{timeit}}. However,
+#' This is the workhorse function called by \code{\link{timeit}}, and is
+#' primarily meant to be called through \code{\link{timeit}}. However,
 #' if you desire a more direct wrapper to \code{Rprof} then this can
 #' be useful.
 #' @param call a call (typically passed down through \code{timeit}).
@@ -145,15 +153,15 @@ determine_replications <- function( call, interval, base=1E6 ) {
 #' and then infer the run-time as \code{<time>/replications}.
 #' by default, the argument is \code{NULL} and we attempt to infer an
 #' appropriate number of replications.
-#' @param memory.profiling logical. write memory use information to file?
+#' @param memory.profiling logical. include memory use in output?
 #' @param show.warnings boolean. output a warning if any iteration of the
 #' run did not produce results?
 #' @param i integer. the iteration number. primarily for use from \code{\link{timeit}}.
 #' @param gcFirst boolean. run the garbage collector before any evaluation of the function call?
-#' @param gcDuring boolean. run the garbage collector before each interation, as produced
+#' @param gcDuring boolean. run the garbage collector before each iteration, as produced
 #' by \code{replications}? (very slow)
 #' @export
-#' @return a data.frame of the profiling times
+#' @return A data.frame of the profiling times.
 do_timeit <- function(call, 
                       replications=NULL,
                       interval=0.005, 
@@ -182,8 +190,8 @@ do_timeit <- function(call,
   
   if( gcFirst ) gc(FALSE)
   
-  tmp <- tempfile()
-  on.exit( unlink(tmp) )
+  ..tmp.. <- tempfile()
+  on.exit( unlink(..tmp..) )
   
   timeit_invisible <- invisible
   timeit_eval <- eval
@@ -196,11 +204,11 @@ do_timeit <- function(call,
     }
   }
     
-  Rprof( tmp, interval=interval, memory.profiling=memory.profiling )
+  Rprof( ..tmp.., interval=interval, memory.profiling=memory.profiling )
   timeit_replicate( replications, call_me )
   Rprof(NULL)
   
-  out <- tryCatch( summaryRprof(tmp, memory=memory),
+  out <- tryCatch( summaryRprof(..tmp.., memory=memory),
                    error = function(e) {
                      if( show.warnings ) warning("no events recorded for iteration ", i )
                      return( invisible(NULL) )

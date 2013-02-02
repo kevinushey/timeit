@@ -15,14 +15,14 @@
   of replications. in order to more accurately profile
   quickly-running functions, we run the call
   \code{replications} times, and then infer the run-time as
-  \code{<time>/replications}. by default, the argument is
-  \code{NULL} and we attempt to infer an appropriate number
-  of replications.}
+  \code{<time>} / \code{replications}. by default, the
+  argument is \code{NULL} and we attempt to infer an
+  appropriate number of replications.}
 
   \item{interval}{real. time interval between samples.}
 
-  \item{memory.profiling}{logical. write memory use
-  information to file?}
+  \item{memory.profiling}{logical. output memory usage
+  statistics?}
 
   \item{times}{integer. how many times to call the
   function?}
@@ -66,7 +66,7 @@
   Currently, \code{timeit} does not support passing through
   of arguments, so don't try to wrap \code{timeit} in a
   function call, whereby the call it attempts to evaluate
-  is passed from a parent function. Eg;
+  is passed from a parent function. For example,
 
   \code{f <- function(x) { timeit(x) }; f(rnorm(10))}
 
@@ -82,9 +82,11 @@ summary(tmp)
 y <- 1E4
 f <- function(x) { summary( sort( rnorm(x) ) ) }
 tmp <- timeit( f(y), times=5 )
-summary(tmp)
-mean(tmp)
-plot(tmp)}
+if( !is.null(tmp) ) {
+  summary(tmp)
+  mean(tmp)
+  plot(tmp)
+}}
 }
 \seealso{
   \code{\link{mean.timeit}} for mean running times over all
@@ -93,6 +95,6 @@ plot(tmp)}
   generating a boxplot of the returned times,
   \code{\link{do_timeit}} for the workhorse function, and
   \code{\link{Rprof}} for information on how \R profiles
-  execution of \R expressions.
+  the execution of expressions.
 }
 

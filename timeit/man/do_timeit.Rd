@@ -21,8 +21,8 @@
   \code{NULL} and we attempt to infer an appropriate number
   of replications.}
 
-  \item{memory.profiling}{logical. write memory use
-  information to file?}
+  \item{memory.profiling}{logical. include memory use in
+  output?}
 
   \item{show.warnings}{boolean. output a warning if any
   iteration of the run did not produce results?}
@@ -34,15 +34,15 @@
   any evaluation of the function call?}
 
   \item{gcDuring}{boolean. run the garbage collector before
-  each interation, as produced by \code{replications}?
-  (very slow)}
+  each iteration, as produced by \code{replications}? (very
+  slow)}
 }
 \value{
-  a data.frame of the profiling times
+  A data.frame of the profiling times.
 }
 \description{
   This is the workhorse function called by
-  \code{\link{timeit}}. Primarily meant to be called
+  \code{\link{timeit}}, and is primarily meant to be called
   through \code{\link{timeit}}. However, if you desire a
   more direct wrapper to \code{Rprof} then this can be
   useful.
