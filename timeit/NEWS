@@ -1,6 +1,7 @@
 Version 0.2.1
 ------------------------------------------------------------------
   * Examples not run to ensure build completes on Mac
+  * Move ggplot2 from dependency to suggest
   * Documentation updates
   * Minor bug fixes
 

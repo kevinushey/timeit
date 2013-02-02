@@ -40,8 +40,7 @@
   usage. This allows you to profile either a single
   function call, or a whole block. Evaluation can be run
   multiple times in order to assess variability in the
-  timings of each function call (to some level of
-  precision).
+  timings of each function call.
 }
 \details{
   Function calls that get executed very quickly will be

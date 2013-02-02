@@ -62,7 +62,7 @@
 #' if( !is.null(tmp) ) {
 #'   summary(tmp)
 #'   mean(tmp)
-#'   plot(tmp)
+#'   if( require(ggplot2) ) { plot(tmp) }
 #' }}
 timeit <- function(call,
                    replications=NULL,
@@ -281,7 +281,9 @@ summary.timeit <- function( object, ... ) {
 #' @S3method plot timeit
 plot.timeit <- function( x, y=NULL, min.pct=5, ... ) {
   
-  require("ggplot2")
+  if( !require("ggplot2") ) {
+    stop("plotting requires ggplot2")
+  }
   
   if( min.pct < 0 || min.pct > 100 ) {
     stop( "min.pct must be between 0 and 100" )
