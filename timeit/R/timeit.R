@@ -42,7 +42,7 @@
 #' won't work properly; a fix may come in the future.
 #' 
 #' @export
-#' @return an object of S3 classes \code{timeit} and \code{data.frame}.
+#' @return An object of S3 classes \code{timeit} and \code{data.frame}.
 #' @seealso \code{\link{mean.timeit}} for mean running times over all
 #' iterations processed, \code{\link{summary.timeit}} for summary
 #' statistics,
@@ -79,6 +79,9 @@ timeit <- function(call,
   }
   
   call_me <- match.call()$call
+  if( length( grep( "^ ?call ?$", as.character(call_me), perl=TRUE ) ) > 0 ) {
+    stop("'call' cannot be used as a variable / function name within your code block")
+  }
   
   if( is.null(replications) ) {
     cat("Determining an appropriate number of replications... ")
@@ -197,10 +200,10 @@ do_timeit <- function(call,
   timeit_eval <- eval
   timeit_gc <- gc
   
-  timeit_replicate <- function( replications, call ) {
+  timeit_replicate <- function( replications, .call ) {
     for( i in 1:replications ) {
       if( gcDuring ) timeit_invisible( timeit_gc(FALSE) )
-      timeit_invisible( timeit_eval( call ) )
+      timeit_invisible( timeit_eval( .call ) )
     }
   }
     
@@ -223,7 +226,7 @@ do_timeit <- function(call,
     }
     
     out$replications <- replications
-    out$iter <- i
+    out$iteration <- i
     out$func <- rownames(out)
   
     ## remove the f'ns we don't need to know about
@@ -289,9 +292,9 @@ plot.timeit <- function( x, y=NULL, min.pct=5, ... ) {
     stop( "min.pct must be between 0 and 100" )
   }
   
-  num_iter <- max( x$iter )
+  num_iteration <- max( x$iteration )
   overall_times <- with( x, tapply( self.pct, func, function(x) {
-    sum( x / num_iter )
+    sum( x / num_iteration )
   } ) )
   keep <- names(overall_times)[ overall_times > min.pct ]
   x <- x[ x$func %in% keep, , drop=FALSE ]
@@ -322,8 +325,7 @@ plot.timeit <- function( x, y=NULL, min.pct=5, ... ) {
            geom_point( pch=21, fill="red", col="black", alpha=0.4 ) +
            xlab("") +
            ylab( paste( sep="", "Time (", names(use.time), ")" ) ) + 
-           ggtitle( paste( sep="", "Time (", names(use.time), ")",
-                           " spent in each function call" ) ) +
+           ggtitle( paste( sep="", "Time spent in each function call" ) ) +
            coord_flip()
   )
   
@@ -340,12 +342,12 @@ plot.timeit <- function( x, y=NULL, min.pct=5, ... ) {
 #' @method mean timeit
 mean.timeit <- function(x, ...) {
   names <- names(x)
-  n <- max( x$iter )
+  n <- max( x$iteration )
   fun <- function(x) {
     return( sum(x) / n )
   }
   out <- aggregate( x[ !(names(x) %in% "func") ], x["func"], FUN=fun )
   out$replications <- out$replications * n
-  out$iter <- tapply( x$iter, x$func, length )
+  out$iterations <- tapply( x$iteration, x$func, length )
   out[ order(out$self.time, decreasing=TRUE), ]
 }

@@ -31,7 +31,7 @@
   iteration of the run did not produce results?}
 }
 \value{
-  an object of S3 classes \code{timeit} and
+  An object of S3 classes \code{timeit} and
   \code{data.frame}.
 }
 \description{
@@ -84,7 +84,7 @@ tmp <- timeit( f(y), times=5 )
 if( !is.null(tmp) ) {
   summary(tmp)
   mean(tmp)
-  plot(tmp)
+  if( require(ggplot2) ) { plot(tmp) }
 }}
 }
 \seealso{
