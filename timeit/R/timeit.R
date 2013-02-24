@@ -27,6 +27,7 @@
 #' @param times integer. how many times to call the function?
 #' @param show.warnings boolean. output a warning if any iteration of the
 #' run did not produce results?
+#' @param plot boolean; if \code{TRUE} we return a boxplot  of the running times.
 #' @note If you set the \code{replications} argument high, you will likely
 #' see some output from the \code{do_timeout} call that is unrelated to your
 #' function call. This is due to all the wrapping of a function call to
@@ -69,7 +70,8 @@ timeit <- function(call,
                    interval=0.01,
                    memory.profiling=TRUE,
                    times=10,
-                   show.warnings=FALSE
+                   show.warnings=FALSE,
+                   plot=TRUE
                    ) {
   
   ## arg pre-processing
@@ -123,7 +125,7 @@ timeit <- function(call,
                       )
   
   class(out) <- c("timeit", "data.frame")
-  
+  if( plot ) plot(out)
   return(out)
   
 }
@@ -285,7 +287,8 @@ summary.timeit <- function( object, ... ) {
 plot.timeit <- function( x, y=NULL, min.pct=5, ... ) {
   
   if( !require("ggplot2") ) {
-    stop("plotting requires ggplot2")
+    message("plotting requires ggplot2")
+    return( invisible(NULL) )
   }
   
   if( min.pct < 0 || min.pct > 100 ) {

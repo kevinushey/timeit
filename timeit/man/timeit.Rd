@@ -4,7 +4,7 @@
 \usage{
   timeit(call, replications = NULL, interval = 0.01,
     memory.profiling = TRUE, times = 10,
-    show.warnings = FALSE)
+    show.warnings = FALSE, plot = TRUE)
 }
 \arguments{
   \item{call}{a call; this can be a single function call or
@@ -29,6 +29,9 @@
 
   \item{show.warnings}{boolean. output a warning if any
   iteration of the run did not produce results?}
+
+  \item{plot}{boolean; if \code{TRUE} we return a boxplot
+  of the running times.}
 }
 \value{
   An object of S3 classes \code{timeit} and
