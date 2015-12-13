@@ -7,7 +7,7 @@ Author: Kevin Ushey
 Maintainer: Kevin Ushey <kevinushey@gmail.com>
 Description: Provides an easy-to-use wrapper to Rprof() and summaryRprof() in
     the profiling of both function calls and whole blocks of code.
-Depends:
+Imports:
     microbenchmark
 Suggests:
     ggplot2
