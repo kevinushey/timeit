@@ -1,7 +1,7 @@
 Package: timeit
 Type: Package
 Title: Easy profiling of R functions
-Version: 0.2.2
+Version: 0.2.3
 Date: 2013-02-24
 Author: Kevin Ushey
 Maintainer: Kevin Ushey <kevinushey@gmail.com>
