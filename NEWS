@@ -1,3 +1,8 @@
+Version 0.2.2
+------------------------------------------------------------------
+  * Fixed an error occurring in 'timeit' when 'Rprof' did not report any
+    output.
+
 Version 0.2.1
 ------------------------------------------------------------------
   * Examples not run to ensure build completes on Mac OS
