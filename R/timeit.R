@@ -127,6 +127,11 @@ timeit <- function(call,
                        optional = TRUE,
                        do.call(rbind, out_list))
   
+  if (!nrow(out)) {
+    warning("no data captured; try increasing the 'replications' argument")
+    return(out)
+  }
+  
   out$func <- factor(out$func,
                      levels = names(sort(tapply(
                        out$self.time, out$func, median
@@ -237,6 +242,9 @@ do_timeit <- function(call,
   
   if (!is.null(out)) {
     out <- out$by.self
+    if (nrow(out) == 0)
+      return(invisible(NULL))
+    
     out$self.time <- out$self.time / replications
     out$total.time <- out$total.time / replications
     if ("mem.total" %in% names(out)) {
@@ -253,9 +261,8 @@ do_timeit <- function(call,
       out <- out[condition, , drop = FALSE]
     }
     
-    if (nrow(out) == 0) {
+    if (nrow(out) == 0)
       return(invisible(NULL))
-    }
     
     ## re-calc the pct. times
     out$self.pct <- out$self.time / sum(out$self.time) * 100
